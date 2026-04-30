@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Moral - Peças</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e24;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #2b2b36;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #ff4757;
+            border-bottom: 2px solid #ff4757;
+            padding-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group-full {
+            grid-column: span 2;
+            background-color: #353b48;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #fbc531;
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ced6e0;
+        }
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #57606f;
+            background-color: #1e1e24;
+            color: #ffffff;
+            font-size: 14px;
+        }
+        select:focus {
+            outline: none;
+            border-color: #ff4757;
+        }
+        .combo-select {
+            border-color: #fbc531;
+            font-weight: bold;
+        }
+        .total-container {
+            background-color: #ff4757;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            position: sticky;
+            bottom: 20px;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+        }
+        .section-title {
+            grid-column: span 2;
+            margin-top: 20px;
+            color: #7bed9f;
+            font-size: 18px;
+            border-bottom: 1px solid #57606f;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Calculadora de Valores de Moral</h1>
+    
+    <div class="grid" id="pecas-form">
+        
+        <!-- Combo Rápido -->
+        <div class="form-group form-group-full">
+            <label style="color: #fbc531;">Preenchimento Rápido (Todas as Peças)</label>
+            <select id="combo-stage" class="combo-select" onchange="aplicarCombo()">
+                <option value="0">Personalizado (Montar Manualmente)</option>
+                <option value="1">Full Stage 1</option>
+                <option value="2">Full Stage 2</option>
+                <option value="3">Full Stage 3</option>
+            </select>
+        </div>
+
+        <!-- Motor -->
+        <div class="section-title">MOTOR BASE</div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Motor</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option value="0">Original (0)</option>
+                <option value="405">Ap 4l 1.9 (405)</option>
+                <option value="410">Chev 4l 2.5 (410)</option>
+                <option value="430">Chev. 6l 4.1 / Ae86 4Age / Suzuki Gsx / S1000RR (430)</option>
+                <option value="440">I4 V-Tech 2.0 / VW VR6 2.8L (440)</option>
+                <option value="450">Lancer 4B11T / VW V8 TFSI / Mazda 20B (450)</option>
+                <option value="460">Subaru ej257 / Mazda Rx7 / EA888 2.0 (460)</option>
+                <option value="470">Nissan 350Z / Toyota 2JZ / Nissan Rb26 / EcoBoost / Charger Hemi (470)</option>
+                <option value="600">Bmw 6l 2.5 (600)</option>
+                <option value="650">Corvette C6 LS3 / VW EA839 (650)</option>
+                <option value="700">V8 5.0 Small Block / Mercedes C63 (700)</option>
+                <option value="800">Bmw S63b44 V8 / S50 6L (800)</option>
+                <option value="950">F154 V8 (950)</option>
+                <option value="1000">6I Diesel Cummins / Detroit Diesel / Nissan Rb28 (1000)</option>
+                <option value="1100">Coyote 5.0 V8 / Nissan GTR V6 (1100)</option>
+                <option value="1150">Porsche 922 / Mercedes C30 V6 (1150)</option>
+                <option value="1200">Audi RS7 (1200)</option>
+                <option value="1225">Hemi V8 (1225)</option>
+                <option value="1250">Porsche Gt3 Rs 4L (1250)</option>
+                <option value="1275">Mazda 26B 4 Rotor (1275)</option>
+            </select>
+        </div>
+
+        <!-- Turbo -->
+        <div class="section-title">TURBO</div>
+        <div class="form-group">
+            <label>Sistema de Turbo</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Nenhum (0)</option>
+                <option value="80">Stage 1 - Master Power 1.3 Bar (80)</option>
+                <option value="250">Stage 2 - PSR 2.4 Bar (250)</option>
+                <option value="350">Stage 3 - PSR 4.0 Bar (350)</option>
+            </select>
+        </div>
+
+        <!-- Internos -->
+        <div class="section-title">PREPARAÇÃO / INTERNO</div>
+        <div class="form-group">
+            <label>Kit Preparação</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Nenhum (0)</option>
+                <option value="45">Kit Rebaixados (45)</option> <!-- Funciona como Stage 1 -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Biela</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="20">Stage 1 - Forjada (20)</option>
+                <option value="120">Stage 2 - Alumínio (120)</option>
+                <option value="155">Stage 3 - Titanium (155)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Pistão</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="20">Stage 1 - Forjado (20)</option>
+                <option value="120">Stage 2 - Forjado Destaxado (120)</option>
+                <option value="175">Stage 3 - Forjado Taxado (175)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Virabrequim</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="16">Stage 1 - Forjado (16)</option>
+                <option value="90">Stage 2 - Billet (90)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Bloco</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="24">Stage 1 - Reforçado (24)</option>
+                <option value="110">Stage 2 - Billet (110)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Junta de Cabeçote</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="30">Stage 1 - Amianto (30)</option>
+                <option value="100">Stage 2 - Aço (100)</option>
+                <option value="148">Stage 3 - Oring (148)</option>
+            </select>
+        </div>
+
+        <!-- Cabeçote / Comando -->
+        <div class="section-title">CABEÇOTE / COMANDO</div>
+        <div class="form-group">
+            <label>Cabeçote</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="45">Stage 1 (45)</option>
+                <option value="180">Stage 2 (180)</option>
+                <option value="225">Stage 3 (225)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Comando</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="32">Stage 1 - Simples SOHC (32)</option>
+                <option value="160">Stage 2 - Duplo DOHC (160)</option>
+            </select>
+        </div>
+
+        <!-- Admissão -->
+        <div class="section-title">ADMISSÃO / FLUXO</div>
+        <div class="form-group">
+            <label>Coletor de Admissão</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="24">Stage 1 - Plenum (24)</option>
+                <option value="50">Stage 2 - Dual Plenum (50)</option>
+                <option value="130">Stage 3 - Billet (130)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>TBI</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="34">Stage 1 - 60ml (34)</option>
+                <option value="50">Stage 2 - 70ml (50)</option>
+                <option value="125">Stage 3 - 90ml (125)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Filtro de Ar</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="24">Stage 1 - Esportivo (24)</option>
+                <option value="60">Stage 2 - Cold Air Intake (60)</option>
+            </select>
+        </div>
+
+        <!-- Refrigeração -->
+        <div class="section-title">REFRIGERAÇÃO</div>
+        <div class="form-group">
+            <label>Intercooler</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="26">Stage 1 - Pequeno (26)</option>
+                <option value="150">Stage 2 - Grande (150)</option>
+                <option value="195">Stage 3 - Ice Cooler (195)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Radiador</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="26">Stage 1 - Alumínio 1 Vent. (26)</option>
+                <option value="100">Stage 2 - Alumínio 2 Vent. (100)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Radiador de Óleo</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="20">Stage 1 - 9 Linhas (20)</option>
+                <option value="100">Stage 2 - 15 Linhas (100)</option>
+            </select>
+        </div>
+
+        <!-- Escape -->
+        <div class="section-title">ESCAPE</div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Coletor de Escape</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="26">Stage 1 - Ferro Fundido (26)</option>
+                <option value="60">Stage 2 - Aço Carbono (60)</option>
+                <option value="140">Stage 3 - Inox (140)</option>
+            </select>
+        </div>
+
+        <!-- Ignição / Combustível -->
+        <div class="section-title">IGNIÇÃO / COMBUSTÍVEL / TRANSMISSÃO</div>
+        <div class="form-group">
+            <label>Velas</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="26">Stage 1 - Grau 8 (26)</option>
+                <option value="100">Stage 2 - Grau 9 (100)</option>
+                <option value="145">Stage 3 - Iridium Grau 10 (145)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Injetores</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="38">Stage 1 - 80 LBS (38)</option>
+                <option value="150">Stage 2 - 160 LBS (150)</option>
+                <option value="156">Stage 3 - 225 LBS (156)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Embreagem</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="22">Stage 1 - Cerâmica (22)</option>
+                <option value="110">Stage 2 - Multi Disco (110)</option>
+                <option value="152">Stage 3 - Centrifuga (152)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Óleo (Lubrificação)</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option value="0">Original (0)</option>
+                <option value="10">Stage 1 - Mineral (10)</option>
+                <option value="40">Stage 2 - Semi Sintético (40)</option>
+                <option value="100">Stage 3 - Sintético (100)</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="total-container">
+        TOTAL DE MORAL: <span id="valor-total">0</span>
+    </div>
+</div>
+
+<script>
+    // Função para aplicar os Stages em todas as peças de uma vez
+    function aplicarCombo() {
+        const comboSelecionado = parseInt(document.getElementById('combo-stage').value);
+        const pecas = document.querySelectorAll('.peca-stage');
+
+        if (comboSelecionado === 0) return; // Se for Personalizado, não faz nada com as peças
+
+        pecas.forEach(select => {
+            // Conta quantas opções a peça tem (descontando o Original "0")
+            const maxOptions = select.options.length - 1; 
+            
+            // Se a peça não tiver o Stage pedido (ex: Stage 3 num Radiador que só tem Stage 2), seleciona o máximo possível
+            const indexParaSelecionar = Math.min(comboSelecionado, maxOptions);
+            
+            select.selectedIndex = indexParaSelecionar;
+        });
+
+        calcularTotal();
+    }
+
+    // Se o usuário alterar uma peça manualmente, muda o combo para "Personalizado"
+    function verificarPersonalizado() {
+        document.getElementById('combo-stage').value = "0";
+        calcularTotal();
+    }
+
+    // Calcula a soma final de tudo
+    function calcularTotal() {
+        const selects = document.querySelectorAll('.peca-select');
+        let total = 0;
+        
+        selects.forEach(select => {
+            total += parseInt(select.value) || 0;
+        });
+        
+        document.getElementById('valor-total').innerText = total;
+    }
+</script>
+
+</body>
+</html>
