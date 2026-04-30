@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Peças - RP</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e24;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background-color: #2b2b36;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            max-width: 900px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #ff4757;
+            border-bottom: 2px solid #ff4757;
+            padding-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group-full {
+            grid-column: span 2;
+            background-color: #353b48;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #fbc531;
+            margin-bottom: 10px;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #ced6e0;
+        }
+        select {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #57606f;
+            background-color: #1e1e24;
+            color: #ffffff;
+            font-size: 14px;
+        }
+        select:focus {
+            outline: none;
+            border-color: #ff4757;
+        }
+        .combo-select {
+            border-color: #fbc531;
+            font-weight: bold;
+            color: #fbc531;
+        }
+        .total-container {
+            background-color: #2f3542;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 20px;
+            position: sticky;
+            bottom: 20px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.6);
+            border: 2px solid #57606f;
+        }
+        .box-resultado {
+            text-align: center;
+        }
+        .box-resultado span {
+            display: block;
+            font-size: 28px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        .moral-text { color: #ff4757; }
+        .preco-text { color: #2ed573; }
+        
+        .section-title {
+            grid-column: span 2;
+            margin-top: 20px;
+            color: #7bed9f;
+            font-size: 18px;
+            border-bottom: 1px solid #57606f;
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Orçamento de Preparação</h1>
+    
+    <div class="grid" id="pecas-form">
+        
+        <!-- Combo Rápido -->
+        <div class="form-group form-group-full">
+            <label style="color: #fbc531;">Preenchimento Rápido (Todas as Peças)</label>
+            <select id="combo-stage" class="combo-select" onchange="aplicarCombo()">
+                <option value="0">Personalizado (Montar Manualmente)</option>
+                <option value="1">Full Stage 1</option>
+                <option value="2">Full Stage 2</option>
+                <option value="3">Full Stage 3</option>
+            </select>
+        </div>
+
+        <!-- Motor -->
+        <div class="section-title">MOTOR BASE</div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Motor</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="405" data-preco="40000">Ap 4l 1.9 (M:405 | $40k)</option>
+                <option data-moral="410" data-preco="45000">Chev 4l 2.5 (M:410 | $45k)</option>
+                <option data-moral="430" data-preco="52000">Chev. 6l 4.1 (M:430 | $52k)</option>
+                <option data-moral="430" data-preco="52000">Ae86 4Age L4 (M:430 | $52k)</option>
+                <option data-moral="430" data-preco="55000">Suzuki Gsx 1000 (M:430 | $55k)</option>
+                <option data-moral="430" data-preco="58000">S1000RR (M:430 | $58k)</option>
+                <option data-moral="440" data-preco="65000">I4 V-Tech 2.0 (M:440 | $65k)</option>
+                <option data-moral="440" data-preco="70000">VW VR6 2.8L (M:440 | $70k)</option>
+                <option data-moral="450" data-preco="78000">Lancer 4B11T I4 (M:450 | $78k)</option>
+                <option data-moral="450" data-preco="82000">VW V8 TFSI EA825 (M:450 | $82k)</option>
+                <option data-moral="450" data-preco="90000">Mazda 20B 3 Rotor (M:450 | $90k)</option>
+                <option data-moral="460" data-preco="95000">Subaru EJ257 (M:460 | $95k)</option>
+                <option data-moral="460" data-preco="98000">Mazda RX7 13B (M:460 | $98k)</option>
+                <option data-moral="460" data-preco="102000">EA888 2.0 TSI (M:460 | $102k)</option>
+                <option data-moral="470" data-preco="110000">Nissan 350Z V6 (M:470 | $110k)</option>
+                <option data-moral="470" data-preco="115000">Toyota 2JZ 3.0 (M:470 | $115k)</option>
+                <option data-moral="470" data-preco="120000">Nissan RB26 2.6 (M:470 | $120k)</option>
+                <option data-moral="470" data-preco="125000">EcoBoost 2.3L (M:470 | $125k)</option>
+                <option data-moral="470" data-preco="130000">Charger Hemi V8 (M:470 | $130k)</option>
+                <option data-moral="600" data-preco="300000">BMW 6L 2.5 (M:600 | $300k)</option>
+                <option data-moral="650" data-preco="350000">Corvette C6 LS3 V8 (M:650 | $350k)</option>
+                <option data-moral="650" data-preco="380000">VW EA839 (M:650 | $380k)</option>
+                <option data-moral="700" data-preco="400000">V8 5.0 Small Block (M:700 | $400k)</option>
+                <option data-moral="700" data-preco="430000">Mercedes C63 V8 6.2 (M:700 | $430k)</option>
+                <option data-moral="800" data-preco="450000">BMW S63B44 V8 (M:800 | $450k)</option>
+                <option data-moral="800" data-preco="450000">BMW S50 6L (M:800 | $450k)</option>
+                <option data-moral="950" data-preco="515000">Ferrari F154 V8 (M:950 | $515k)</option>
+                <option data-moral="1000" data-preco="550000">Cummins 6.7 Diesel (M:1000 | $550k)</option>
+                <option data-moral="1000" data-preco="550000">Detroit Diesel D60 (M:1000 | $550k)</option>
+                <option data-moral="1000" data-preco="600000">Nissan RB28 (M:1000 | $600k)</option>
+                <option data-moral="1100" data-preco="600000">Coyote 5.0 V8 (M:1100 | $600k)</option>
+                <option data-moral="1100" data-preco="700000">Nissan GTR VR38 (M:1100 | $700k)</option>
+                <option data-moral="1150" data-preco="730000">Porsche 992 3.0 (M:1150 | $730k)</option>
+                <option data-moral="1150" data-preco="785000">Mercedes C30 V6 (M:1150 | $785k)</option>
+                <option data-moral="1200" data-preco="800000">Audi RS7 (M:1200 | $800k)</option>
+                <option data-moral="1225" data-preco="825000">Hemi V8 (M:1225 | $825k)</option>
+                <option data-moral="1250" data-preco="855000">Porsche GT3 RS 4.0 (M:1250 | $855k)</option>
+                <option data-moral="1275" data-preco="865000">Mazda 26B 4 Rotor (M:1275 | $865k)</option>
+            </select>
+        </div>
+
+        <!-- Turbo -->
+        <div class="section-title">TURBO</div>
+        <div class="form-group">
+            <label>Sistema de Turbo</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Nenhum (0)</option>
+                <option data-moral="80" data-preco="40000">S1 - Master Power 1.3 ($40k)</option>
+                <option data-moral="250" data-preco="75000">S2 - PSR 2.4 Bar ($75k)</option>
+                <option data-moral="350" data-preco="199000">S3 - Garret 4.0 Bar ($199k)</option>
+            </select>
+        </div>
+
+        <!-- Internos -->
+        <div class="section-title">PREPARAÇÃO / INTERNO</div>
+        <div class="form-group">
+            <label>Kit Preparação</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Nenhum (0)</option>
+                <option data-moral="45" data-preco="30000">Kit Rebaixados ($30k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Biela</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="20" data-preco="12000">S1 - Forjada ($12k)</option>
+                <option data-moral="120" data-preco="22000">S2 - Alumínio ($22k)</option>
+                <option data-moral="155" data-preco="65000">S3 - Titanium ($65k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Pistão</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="20" data-preco="14000">S1 - Forjado ($14k)</option>
+                <option data-moral="120" data-preco="24000">S2 - Destaxado ($24k)</option>
+                <option data-moral="175" data-preco="66000">S3 - Taxado ($66k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Virabrequim</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="16" data-preco="0">S1 - Forjado ($22k)</option>
+                <option data-moral="90" data-preco="0">S2 - Billet ($36k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Bloco</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="24" data-preco="0">S1 - Reforçado ($26k)</option>
+                <option data-moral="110" data-preco="0">S2 - Billet ($42k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Junta de Cabeçote</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="30" data-preco="8000">S1 - Amianto ($8k)</option>
+                <option data-moral="100" data-preco="15000">S2 - Aço ($15k)</option>
+                <option data-moral="148" data-preco="66000">S3 - O-Ring ($66k)</option>
+            </select>
+        </div>
+
+        <!-- Cabeçote / Comando -->
+        <div class="section-title">CABEÇOTE / COMANDO</div>
+        <div class="form-group">
+            <label>Cabeçote</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="45" data-preco="0">Stage 1 ($42k)</option>
+                <option data-moral="180" data-preco="0">Stage 2 ($58k)</option>
+                <option data-moral="225" data-preco="0">Stage 3 ($115k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Comando</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="32" data-preco="28000">S1 - Simples SOHC ($28k)</option>
+                <option data-moral="160" data-preco="42000">S2 - Duplo DOHC ($42k)</option>
+            </select>
+        </div>
+
+        <!-- Admissão -->
+        <div class="section-title">ADMISSÃO / FLUXO</div>
+        <div class="form-group">
+            <label>Coletor de Admissão</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="24" data-preco="0">S1 - Plenum ($20k)</option>
+                <option data-moral="50" data-preco="0">S2 - Dual Plenum ($32k)</option>
+                <option data-moral="130" data-preco="0">S3 - Billet ($88k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>TBI</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="34" data-preco="0">S1 - 60mm ($26k)</option>
+                <option data-moral="50" data-preco="0">S2 - 70mm ($38k)</option>
+                <option data-moral="125" data-preco="0">S3 - 90mm ($92k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Filtro de Ar</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="24" data-preco="9000">S1 - Esportivo ($9k)</option>
+                <option data-moral="60" data-preco="18000">S2 - Cold Air Intake ($18k)</option>
+            </select>
+        </div>
+
+        <!-- Refrigeração -->
+        <div class="section-title">REFRIGERAÇÃO</div>
+        <div class="form-group">
+            <label>Intercooler</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="26" data-preco="25000">S1 - Pequeno ($25k)</option>
+                <option data-moral="150" data-preco="38000">S2 - Grande ($38k)</option>
+                <option data-moral="195" data-preco="82000">S3 - Ice Cooler ($82k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Radiador</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="26" data-preco="18000">S1 - 1 Ventoinha ($18k)</option>
+                <option data-moral="100" data-preco="28000">S2 - 2 Ventoinhas ($28k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Radiador de Óleo</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="20" data-preco="16000">S1 - 9 Linhas ($16k)</option>
+                <option data-moral="100" data-preco="26000">S2 - 15 Linhas ($26k)</option>
+            </select>
+        </div>
+
+        <!-- Escape -->
+        <div class="section-title">ESCAPE</div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Coletor de Escape</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="26" data-preco="18000">S1 - Ferro Fundido ($18k)</option>
+                <option data-moral="60" data-preco="30000">S2 - Aço Carbono ($30k)</option>
+                <option data-moral="140" data-preco="95000">S3 - Inox ($95k)</option>
+            </select>
+        </div>
+
+        <!-- Ignição / Combustível -->
+        <div class="section-title">IGNIÇÃO / COMBUSTÍVEL</div>
+        <div class="form-group">
+            <label>Velas</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="26" data-preco="9000">S1 - Grau 8 ($9k)</option>
+                <option data-moral="100" data-preco="15000">S2 - Grau 9 ($15k)</option>
+                <option data-moral="145" data-preco="64000">S3 - Iridium Grau 10 ($64k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Injetores</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="38" data-preco="26000">S1 - 80 LBS ($26k)</option>
+                <option data-moral="150" data-preco="38000">S2 - 160 LBS ($38k)</option>
+                <option data-moral="156" data-preco="0">S3 - 225 LBS ($82k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Embreagem</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="22" data-preco="0">S1 - Cerâmica ($18k)</option>
+                <option data-moral="110" data-preco="0">S2 - Multi Disco ($30k)</option>
+                <option data-moral="152" data-preco="0">S3 - Centrifuga ($82k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Óleo (Lubrificação)</label>
+            <select class="peca-select peca-stage" onchange="verificarPersonalizado()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="10" data-preco="0">S1 - Mineral ($3,5k)</option>
+                <option data-moral="40" data-preco="0">S2 - Semi Sintético ($5,5k)</option>
+                <option data-moral="100" data-preco="0">S3 - Sintético (125,52k)</option>
+            </select>
+        </div>
+
+        <!-- Mão de Obra e Serviços -->
+        <div class="section-title">MÃO DE OBRA / SERVIÇOS</div>
+        <div class="form-group">
+            <label>Instalação de Motor</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Não (0)</option>
+                <option data-moral="0" data-preco="22000">Sim ($22k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Instalação de Turbina</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Não (0)</option>
+                <option data-moral="0" data-preco="15000">Sim ($15k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Instalação Peças Performance</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Nenhuma (0)</option>
+                <option data-moral="0" data-preco="4000">1 Peça ($4k)</option>
+                <option data-moral="0" data-preco="8000">2 Peças ($8k)</option>
+                <option data-moral="0" data-preco="12000">3 Peças ($12k)</option>
+                <option data-moral="0" data-preco="16000">4 Peças ($16k)</option>
+                <option data-moral="0" data-preco="20000">5 Peças ($20k)</option>
+                <option data-moral="0" data-preco="24000">6 Peças ($24k)</option>
+                <option data-moral="0" data-preco="28000">7 Peças ($28k)</option>
+                <option data-moral="0" data-preco="32000">8 Peças ($32k)</option>
+                <option data-moral="0" data-preco="36000">9 Peças ($36k)</option>
+                <option data-moral="0" data-preco="40000">10 Peças ($40k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Instalar Fueltech</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Não (0)</option>
+                <option data-moral="0" data-preco="21000">Sim ($21k)</option>
+            </select>
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Regular Fueltech (A Negociar)</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Não / Já Regulado (0)</option>
+                <option data-moral="0" data-preco="10000">Regulagem R$ 10.000</option>
+                <option data-moral="0" data-preco="20000">Regulagem R$ 20.000</option>
+                <option data-moral="0" data-preco="30000">Regulagem R$ 30.000</option>
+                <option data-moral="0" data-preco="40000">Regulagem R$ 40.000</option>
+                <option data-moral="0" data-preco="50000">Regulagem R$ 50.000 (Máx)</option>
+            </select>
+        </div>
+
+        <!-- Modificações Dinâmicas -->
+        <div class="section-title">MODIFICAÇÕES DINÂMICAS</div>
+        <div class="form-group">
+            <label>Freios</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="0" data-preco="11000">Cerâmicos ($11k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Kit de Drift</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Não (0)</option>
+                <option data-moral="0" data-preco="23000">Sim ($23k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Tipo de Tração</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="0" data-preco="8000">Dianteira - FWD ($8k)</option>
+                <option data-moral="0" data-preco="13000">Traseira - RWD ($13k)</option>
+                <option data-moral="0" data-preco="20000">4 Rodas - AWD ($20k)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Câmbio / Transmissão</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="0" data-preco="20000">Manual ($20k)</option>
+                <option data-moral="0" data-preco="24000">6 Marchas ($24k)</option>
+                <option data-moral="0" data-preco="42000">7 Marchas ($42k)</option>
+            </select>
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Pneus</label>
+            <select class="peca-select" onchange="calcularTotal()">
+                <option data-moral="0" data-preco="0">Original (0)</option>
+                <option data-moral="0" data-preco="8000">Semi Slick ($8k)</option>
+                <option data-moral="0" data-preco="12000">Slick ($12k)</option>
+                <option data-moral="0" data-preco="13000">Offroad ($13k)</option>
+            </select>
+        </div>
+
+    </div>
+
+    <div class="total-container">
+        <div class="box-resultado">
+            TOTAL MORAL
+            <span id="valor-total" class="moral-text">0</span>
+        </div>
+        <div class="box-resultado">
+            VALOR TOTAL
+            <span id="preco-total" class="preco-text">$ 0,00</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Função para aplicar os Stages em todas as peças de uma vez
+    function aplicarCombo() {
+        const comboSelecionado = parseInt(document.getElementById('combo-stage').value);
+        const pecas = document.querySelectorAll('.peca-stage');
+
+        if (comboSelecionado === 0) return;
+
+        pecas.forEach(select => {
+            const maxOptions = select.options.length - 1; 
+            const indexParaSelecionar = Math.min(comboSelecionado, maxOptions);
+            select.selectedIndex = indexParaSelecionar;
+        });
+
+        calcularTotal();
+    }
+
+    // Volta o combo para "Personalizado" se mexer manualmente em alguma peça
+    function verificarPersonalizado() {
+        document.getElementById('combo-stage').value = "0";
+        calcularTotal();
+    }
+
+    // Calcula Moral e Dinheiro juntos
+    function calcularTotal() {
+        const selects = document.querySelectorAll('.peca-select');
+        let totalMoral = 0;
+        let totalPreco = 0;
+        
+        selects.forEach(select => {
+            const opcaoSelecionada = select.options[select.selectedIndex];
+            totalMoral += parseInt(opcaoSelecionada.getAttribute('data-moral')) || 0;
+            totalPreco += parseInt(opcaoSelecionada.getAttribute('data-preco')) || 0;
+        });
+        
+        // Atualiza a Moral
+        document.getElementById('valor-total').innerText = totalMoral;
+        
+        // Atualiza o Dinheiro formatado como Moeda (Dólar/Real RP)
+        document.getElementById('preco-total').innerText = totalPreco.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        });
+    }
+</script>
+
+</body>
+</html>
